@@ -1,6 +1,7 @@
 <?php
 
 use FoxEngineers\AdminCP\Helpers\HtmlHelper;
+use Illuminate\Support\HtmlString;
 use Spatie\Html\Elements\A;
 use Spatie\Html\Elements\Button;
 
@@ -57,9 +58,9 @@ if (!function_exists('style')) {
      * @param array     $attributes
      * @param bool|null $secure
      *
-     * @return mixed
+     * @return HtmlString
      */
-    function style(string $url, array $attributes = [], ?bool $secure = null)
+    function style(string $url, array $attributes = [], ?bool $secure = null): HtmlString
     {
         return resolve(HtmlHelper::class)->style($url, $attributes, $secure);
     }
