@@ -1,5 +1,9 @@
 <?php
 
+use FoxEngineers\AdminCP\Helpers\HtmlHelper;
+use Spatie\Html\Elements\A;
+use Spatie\Html\Elements\Button;
+
 if (!function_exists('real_path')) {
     function real_path(?string $url): string
     {
@@ -73,5 +77,34 @@ if (!function_exists('script')) {
     function script($url, $attributes = [], $secure = null)
     {
         return resolve(HtmlHelper::class)->script($url, $attributes, $secure);
+    }
+}
+
+if (!function_exists('form_cancel')) {
+
+    /**
+     * @param string $href
+     * @param string $title
+     * @param string $classes
+     *
+     * @return A
+     */
+    function form_cancel(string $href, string $title, string $classes = 'btn btn-danger btn-sm'): A
+    {
+        return resolve(HtmlHelper::class)->formCancel($href, $title, $classes);
+    }
+}
+
+if (!function_exists('form_submit')) {
+
+    /**
+     * @param string $title
+     * @param string $classes
+     *
+     * @return Button
+     */
+    function form_submit(string $title, string $classes = 'btn btn-success btn-sm pull-right'): Button
+    {
+        return resolve(HtmlHelper::class)->formSubmit($title, $classes);
     }
 }
