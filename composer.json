@@ -27,7 +27,8 @@
     "php": ">=8.1",
     "ext-json": "*",
     "prettus/l5-repository": "^2.7",
-    "artesaos/seotools": "^1.2.0"
+    "artesaos/seotools": "^1.2.0",
+    "spatie/laravel-html": "^3.2.1"
   },
   "autoload": {
     "psr-4": {
