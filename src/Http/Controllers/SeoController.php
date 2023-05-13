@@ -12,6 +12,7 @@ use App\Models\Constant;
 use App\Models\Page;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Traits\SEOTools;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 abstract class SeoController extends Controller
@@ -83,10 +84,11 @@ abstract class SeoController extends Controller
     }
 
     /**
-     * @param $alias
-     * @return Page
+     * @param string $alias
+     *
+     * @return Model
      */
-    public function getPage($alias) {
+    public function getPage(string $alias): Model {
         return $this->pages[$alias];
     }
 }
