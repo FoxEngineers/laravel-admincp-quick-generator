@@ -18,3 +18,30 @@ if (!function_exists('help_text')) {
         return "<p>- {$text}: <a href='{$url}' target='_blank'>{$url}</a></p>";
     }
 }
+
+if (!function_exists('include_route_files')) {
+
+    /**
+     * Loops through a folder and requires all PHP files
+     * Searches subdirectories as well.
+     *
+     * @param string $folder
+     */
+    function include_route_files(string $folder): void
+    {
+        try {
+            $rdi = new recursiveDirectoryIterator($folder);
+            $it = new recursiveIteratorIterator($rdi);
+
+            while ($it->valid()) {
+                if (!$it->isDot() && $it->isFile() && $it->isReadable() && $it->current()->getExtension() === 'php') {
+                    require $it->key();
+                }
+
+                $it->next();
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+}
