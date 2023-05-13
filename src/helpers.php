@@ -53,13 +53,13 @@ if (!function_exists('include_route_files')) {
 if (!function_exists('style')) {
 
     /**
-     * @param       $url
-     * @param array $attributes
-     * @param null $secure
+     * @param string    $url
+     * @param array     $attributes
+     * @param bool|null $secure
      *
      * @return mixed
      */
-    function style($url, $attributes = [], $secure = null)
+    function style(string $url, array $attributes = [], ?bool $secure = null)
     {
         return resolve(HtmlHelper::class)->style($url, $attributes, $secure);
     }
@@ -68,13 +68,13 @@ if (!function_exists('style')) {
 if (!function_exists('script')) {
 
     /**
-     * @param       $url
-     * @param array $attributes
-     * @param null $secure
+     * @param string    $url
+     * @param array     $attributes
+     * @param bool|null $secure
      *
      * @return mixed
      */
-    function script($url, $attributes = [], $secure = null)
+    function script(string $url, array $attributes = [], ?bool $secure = null)
     {
         return resolve(HtmlHelper::class)->script($url, $attributes, $secure);
     }
