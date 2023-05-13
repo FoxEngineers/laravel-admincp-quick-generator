@@ -8,33 +8,25 @@
 
 namespace FoxEngineers\AdminCP\Http\Controllers;
 
-use App\Models\Constant;
-use App\Models\Page;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Traits\SEOTools;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-abstract class SeoController extends Controller
+abstract class SeoController extends BaseController
 {
+    use DispatchesJobs;
+    use ValidatesRequests;
+    use AuthorizesRequests;
     use SEOTools;
 
-    public $thumb = '/frontend/images/logo-home.png';
-
-    public $pages;
-
-    /** @var Constant */
-    public $constants;
-
-    public function __construct()
+    public function parseObjectSEO(array $data): \stdClass
     {
-        $this->pages = app('pages');
-        $this->constants = app('constants');
-    }
-
-    public function parseObjectSEO($data){
         $object = new \stdClass();
-        foreach($data as $k=>$v){
+        foreach ($data as $k => $v) {
             $object->$k = $v;
         }
         return $object;
@@ -42,12 +34,15 @@ abstract class SeoController extends Controller
 
     public function generateSEOByData($data,$alter = false, $type = 'object'){
         $desc = '';
+
         if(isset($data->title)){
             $desc = strip_tags($data->title);
         }
+
         if($type === 'array'){
             $data = $this->parseObjectSEO($data);
         }
+
         if(isset($data->description)){
             $desc = strip_tags($data->description);
         }
@@ -66,7 +61,7 @@ abstract class SeoController extends Controller
             if(isset($data->thumbnail)){
                 $this->seo()->opengraph()->addProperty('image', real_path($data->thumbnail));
             }
-            else $this->seo()->opengraph()->addProperty('image', real_path($this->thumb));
+            else $this->seo()->opengraph()->addProperty('image', real_path($this->getThumbnail()));
         }
         else {
             $this->seo()->setTitle(strip_tags($data->title));
@@ -76,19 +71,13 @@ abstract class SeoController extends Controller
             if(isset($data->thumbnail)) {
                 $this->seo()->opengraph()->addProperty('image', real_path($data->thumbnail));
             }
-            else $this->seo()->opengraph()->addProperty('image', real_path($this->thumb));
+            else $this->seo()->opengraph()->addProperty('image', real_path($this->getThumbnail()));
             $this->seo()->twitter()->setTitle(strip_tags($data->title));
             $this->seo()->twitter()->setDescription(strip_tags($desc));
         }
+
         SEOMeta::addMeta('fb:app_id', env('FACEBOOK_CLIENT_ID', null), 'property');
     }
 
-    /**
-     * @param string $alias
-     *
-     * @return Model
-     */
-    public function getPage(string $alias): Model {
-        return $this->pages[$alias];
-    }
+    abstract public function getThumbnail(): string;
 }
