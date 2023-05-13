@@ -36,7 +36,8 @@
       "FoxEngineers\\AdminCP\\Tests\\": "tests"
     },
     "files": [
-      "src/helpers.php"
+      "src/helpers.php",
+      "src/html-helpers.php"
     ]
   },
   "require-dev": {
