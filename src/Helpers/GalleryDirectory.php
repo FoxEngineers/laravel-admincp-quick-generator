@@ -8,12 +8,13 @@
 
 namespace FoxEngineers\AdminCP\Helpers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\FilesystemException;
 
 class GalleryDirectory
 {
-    protected string $path;
+    protected $path;
 
     public function __construct($path = 'app/public/photos/shares/Galleries')
     {
@@ -21,22 +22,24 @@ class GalleryDirectory
     }
 
     /**
-     * Get all directories of specific path.
-     *
-     * @return array
-     * @throws FilesystemException
+     * @return Filesystem|FilesystemAdapter
      */
+    public function getAdapter()
+    {
+        return Storage::disk('storage');
+    }
+
     public function getDirectories(): array
     {
         $data = [];
 
-        $storage = Storage::disk('storage');
+        $adapter = $this->getAdapter();
 
-        if(!$storage->has($this->path)){
-            $storage->makeDirectory($this->path);
+        if(!$adapter->has($this->path)){
+            $adapter->makeDirectory($this->path);
         }
 
-        $files =  $storage->directories($this->path);
+        $files =  $adapter->directories($this->path);
 
         foreach ($files as $path) {
             $data[$path] = basename($path);
