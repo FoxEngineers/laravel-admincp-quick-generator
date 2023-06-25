@@ -15,14 +15,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
 abstract class SeoController extends BaseController
 {
     use DispatchesJobs;
     use ValidatesRequests;
     use AuthorizesRequests;
     use SEOTools;
-
     public function parseObjectSEO(array $data): \stdClass
     {
         $object = new \stdClass();
@@ -79,5 +77,7 @@ abstract class SeoController extends BaseController
         SEOMeta::addMeta('fb:app_id', env('FACEBOOK_CLIENT_ID', null), 'property');
     }
 
-    abstract public function getThumbnail(): string;
+    public function getThumbnail(): string {
+        return '/frontend/images/logo-home.png';
+    }
 }
