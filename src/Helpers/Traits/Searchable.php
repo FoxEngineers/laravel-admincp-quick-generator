@@ -31,9 +31,9 @@ trait Searchable
         return array_merge($this->searchLike, $this->searchable);
     }
 
-    public function isSearchLike(array $data): bool
+    public function isSearchLike(string $keySearch): bool
     {
-        if (in_array($data, $this->searchLike)) {
+        if (in_array($keySearch, $this->searchLike)) {
             return true;
         }
 
