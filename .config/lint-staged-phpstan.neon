@@ -1,0 +1,13 @@
+parameters:
+    level: max
+    stubFiles:
+    universalObjectCratesClasses:
+        - Illuminate\Http\Request
+    earlyTerminatingFunctionCalls:
+        - abort
+        - dd
+    paths:
+        - ../src
+    excludePaths:
+        - */tests/*
+        - */vendor/*

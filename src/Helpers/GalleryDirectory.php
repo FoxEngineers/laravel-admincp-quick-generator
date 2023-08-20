@@ -1,47 +1,53 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: LAMLAM
- * Date: 12/17/2018
- * Time: 9:26 PM
- */
 
 namespace FoxEngineers\AdminCP\Helpers;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 class GalleryDirectory
 {
-    protected $path;
+    protected string $path;
 
-    public function __construct($path = 'app/public/photos/shares/Galleries')
+    public function __construct(string $path = 'app/public/photos/shares/Galleries')
     {
         $this->path = $path;
     }
 
-    /**
-     * @return Filesystem|FilesystemAdapter
-     */
-    public function getAdapter()
+    public function getAdapter(): Filesystem|FilesystemAdapter
     {
         return Storage::disk('storage');
     }
 
+    /**
+     * Get directories.
+     *
+     * @return array<string, string>
+     *
+     * @throws FilesystemException
+     */
     public function getDirectories(): array
     {
         $data = [];
 
         $adapter = $this->getAdapter();
 
-        if(!$adapter->has($this->path)){
+        if (!$adapter instanceof FilesystemAdapter) {
+            return $data;
+        }
+
+        if (!$adapter->has($this->path)) {
             $adapter->makeDirectory($this->path);
         }
 
-        $files =  $adapter->directories($this->path);
+        $files = $adapter->directories($this->path);
 
         foreach ($files as $path) {
+            if (!\is_string($path)) {
+                continue;
+            }
             $data[$path] = basename($path);
         }
 
