@@ -1,6 +1,6 @@
 <?php
 
-namespace FoxEngineers\AdminCP\Listeners\Frontend\Auth\UserEventListener;
+namespace FoxEngineers\AdminCP\Listeners\Frontend\Auth;
 
 use Carbon\Carbon;
 use FoxEngineers\AdminCP\Events\Frontend\Auth\UserConfirmed;
@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Log;
  */
 class UserEventListener
 {
-    /**
-     * @param $event
-     */
     public function onLoggedIn($event): void
     {
         $ip_address = request()->getClientIp();
@@ -44,33 +41,21 @@ class UserEventListener
         Log::info('User Logged In: '.$event->user->full_name);
     }
 
-    /**
-     * @param $event
-     */
     public function onLoggedOut($event): void
     {
         Log::info('User Logged Out: '.$event->user->full_name);
     }
 
-    /**
-     * @param $event
-     */
     public function onRegistered($event): void
     {
         Log::info('User Registered: '.$event->user->full_name);
     }
 
-    /**
-     * @param $event
-     */
     public function onProviderRegistered($event): void
     {
         Log::info('User Provider Registered: '.$event->user->full_name);
     }
 
-    /**
-     * @param $event
-     */
     public function onConfirmed($event): void
     {
         Log::info('User Confirmed: '.$event->user->full_name);
@@ -81,7 +66,7 @@ class UserEventListener
      *
      * @param Dispatcher $events
      */
-    public function subscribe($events)
+    public function subscribe($events): void
     {
         $events->listen(
             UserLoggedIn::class,
