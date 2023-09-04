@@ -131,6 +131,10 @@ if (!function_exists('generate_form_field')) {
                 $relationModel = $relation['model'];
                 $relationLabel = $relation['label'];
                 $relationValue = '';
+                $relationType = 'text';
+                if (isset($relation['type'])) {
+                    $relationType = $relation['type'];
+                }
                 if ($data->$relationModel) {
                     $hasRoute = isset($relation['route']) && !is_null($relation['route']);
 
@@ -147,6 +151,21 @@ if (!function_exists('generate_form_field')) {
                         }
                         $relationValue .= collect($relationLabelString)->join(' ');
                     } else $relationValue .= $data->$relationModel->$relationLabel;
+
+                    switch ($relationType) {
+                        case 'path':
+                            $relationValue = url($relationValue);
+                            $hasRoute = false;
+                            $link = '<a href="' .$relationValue . '" target="_blank">';
+                            $link .= basename($relationValue);
+                            $link .= '</a>';
+                            // Assign back.
+                            $relationValue = $link;
+                            break;
+                        case 'text':
+                        default:
+                            // Do nothing.
+                    }
 
                     if ($hasRoute) {
                         $relationValue .= '</a>';
