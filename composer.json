@@ -27,7 +27,7 @@
     "php": ">=8.1",
     "ext-json": "*",
     "artesaos/seotools": "^1.2.0",
-    "intervention/image": "2.*|^3.2",
+    "intervention/image": "*",
     "prettus/l5-repository": "^2.7",
     "simplesoftwareio/simple-qrcode": "^4.2",
     "spatie/laravel-html": "^3.2.1",
