@@ -245,7 +245,10 @@ if (!function_exists('input_field')) {
                     ->attributes($options);
                 break;
             case 'datetime':
-                $dateTime = ($data->value) ? $data->value->format('Y-m-d') : now()->format('Y-m-d');
+                $dateTime = now()->format('Y-m-d');
+                if ($data->value instanceof \Carbon\Carbon) {
+                    $dateTime = $data->value->format('Y-m-d');
+                }
                 $input = html()->text($data->name)
                     ->placeholder($data->placeholder)
                     ->class('form-control datepicker')
