@@ -25,6 +25,8 @@ abstract class ResourceControllerCrud extends BaseController
 
     private $perPage = 15;
 
+    public $isUseImport = false;
+
     public $_methods = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
     public $_crudView = false;
@@ -32,6 +34,8 @@ abstract class ResourceControllerCrud extends BaseController
     protected $storeValidate = [];
 
     protected $updateValidate = [];
+
+    protected $importValidate = [];
 
     protected $loadDataForStore = [];
 
@@ -69,6 +73,16 @@ abstract class ResourceControllerCrud extends BaseController
         return [];
     }
 
+    public function importFormData()
+    {
+        return [];
+    }
+
+    public function formDataForImport()
+    {
+        return [];
+    }
+
     public function columns()
     {
         return [];
@@ -94,6 +108,11 @@ abstract class ResourceControllerCrud extends BaseController
         return __('buttons.general.crud.update');
     }
 
+    public function customButton(string $name)
+    {
+        return __('buttons.general.crud.' . $name);
+    }
+
     private function getBaseRoute()
     {
         return $this->route() . '.index';
@@ -107,6 +126,13 @@ abstract class ResourceControllerCrud extends BaseController
     public function crudViewTable()
     {
         return 'backend._form.index';
+    }
+
+    public function getImport()
+    {
+        $this->setDataForImport();
+        $arr = $this->getDataForImport();
+        return view($this->crudView(), $arr);
     }
 
     public function view()
@@ -165,6 +191,22 @@ abstract class ResourceControllerCrud extends BaseController
         $this->loadDataForUpdate = $data;
     }
 
+    private function setDataForImport()
+    {
+        $data = [];
+        if ($this->isUseImport) {
+            $data['formData']['title'] = $this->title();
+            $data['formData']['subTitle'] = 'Import';
+            $data['formData']['inputs'] = $this->importFormData();
+            $data['formData']['method'] = 'POST';
+            $data['formData']['enctype'] = 'multipart';
+            $data['formData']['route'] = route($this->route() . '.import.post');
+            $data['formData']['cancel'] = route($this->getBaseRoute());
+            $data['formData']['submit'] = $this->customButton('import');
+        }
+        $this->loadDataForImport = $data;
+    }
+
     public function getDataForStore()
     {
         return $this->loadDataForStore;
@@ -173,6 +215,11 @@ abstract class ResourceControllerCrud extends BaseController
     public function getDataForUpdate()
     {
         return $this->loadDataForUpdate;
+    }
+
+    public function getDataForImport()
+    {
+        return $this->loadDataForImport;
     }
 
     /**
@@ -207,6 +254,23 @@ abstract class ResourceControllerCrud extends BaseController
     public function getUpdateValidate()
     {
         return $this->updateValidate;
+    }
+
+    public function importValidate()
+    {
+        return [
+            'file' => 'required|mimes:xlsx,xls',
+        ];
+    }
+
+    public function setImportValidate()
+    {
+        $this->importValidate = $this->importValidate();
+    }
+
+    public function getImportValidate()
+    {
+        return $this->importValidate;
     }
 
     public function getPerPage()
@@ -285,6 +349,7 @@ abstract class ResourceControllerCrud extends BaseController
             $data['canCreate'] = (in_array('create', $this->_methods)) ? true : false;
             $data['canUpdate'] = (in_array('edit', $this->_methods)) ? true : false;
             $data['canDelete'] = (in_array('destroy', $this->_methods)) ? true : false;
+            $data['canImport'] = $this->isUseImport;
             $data['route'] = $this->route();
             $data['title'] = $this->title();
             $data['primaryKey'] = $this->primaryKey;
@@ -368,5 +433,23 @@ abstract class ResourceControllerCrud extends BaseController
             logger($e);
             return redirect()->route($this->getBaseRoute())->withFlashDanger(__('strings.backend.crud.delete.failed') . '. ' . $e->getMessage());
         }
+    }
+
+    public function import(Request $request)
+    {
+        $this->setImportValidate();
+        $data = $this->validate($request, $this->getImportValidate());
+        try {
+            $this->executeImport($data['file']);
+            return redirect()->route($this->getBaseRoute())->withFlashSuccess(__('strings.backend.crud.import.success'));
+        } catch (\Exception $e) {
+            logger($e);
+            return redirect()->route($this->getBaseRoute())->withFlashDanger(__('strings.backend.crud.import.failed') . '. ' . $e->getMessage());
+        }
+    }
+
+    public function executeImport(\Illuminate\Http\UploadedFile $file)
+    {
+        // To do import.
     }
 }
