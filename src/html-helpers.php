@@ -59,7 +59,18 @@ if (!function_exists('generate_form')) {
     function generate_form(array $formData): string
     {
         $content = '';
-        $content .= html()->form($formData['method'], $formData['route'])->class('form-horizontal')->open()->toHtml();
+        $form = html()->form($formData['method'], $formData['route'])
+            ->class('form-horizontal');
+        if (isset($formData['enctype'])) {
+            switch ($formData['enctype']) {
+                case 'multipart':
+                    $form = $form->acceptsFiles();
+                    break;
+                default:
+                    // Nothing.
+            }
+        }
+        $content .= $form->open()->toHtml();
         $content .= '<div class="card">';
         $content .= '<div class="card-body">';
         $content .= '<div class="row">';
@@ -202,11 +213,15 @@ if (!function_exists('input_field')) {
         }
 
         if ($type == 'file') {
-            return html_file($data->name, $data->value, $data->label, $isRequired, $options);
+            return html_file($data->name, $data->value, $data->label, $isRequired, $options, false, false);
+        }
+
+        if ($type == 'file.html5') {
+            return html_file($data->name, $data->value, $data->label, $isRequired, $options, false, true);
         }
 
         if ($type == 'files') {
-            return html_file($data->name, $data->value, $data->label, $isRequired, $options, true);
+            return html_file($data->name, $data->value, $data->label, $isRequired, $options, true, false);
         }
 
 
@@ -281,7 +296,7 @@ if (!function_exists('html_file')) {
 
     function html_file(string $name, $value = null, string $text = '',
                        bool $isRequired = true, array $options = ['readonly' => true],
-                       bool $isMultiple = false): string
+                       bool $isMultiple = false, bool $isUseHTML5 = false): string
     {
         $string = '<div class="form-group row">';
 
@@ -295,22 +310,45 @@ if (!function_exists('html_file')) {
 
         $classTrigger = $isMultiple ? 'upload-multiple-files' : 'upload-file';
 
+        // If use HTML5, remove classTrigger.
+        if ($isUseHTML5) {
+            $classTrigger = '';
+        }
+
         $input = '<div class="form-group hidden" id="' . $name . '">';
         $input .= '<div class="input-group">';
-        $input .= '<div class="input-group-prepend">
-                    <a data-input="' . $name . '_input"
+        $input .= '<div class="input-group-prepend">';
+
+        switch ($isUseHTML5) {
+            case true:
+                $input .= '';
+                break;
+            default:
+                $input .= '<a data-input="' . $name . '_input"
                        data-preview="' . $name . '_preview"
                        class="btn btn-success text-white ' . $classTrigger . '">
-                        <i class="fa fa-upload"></i> Choose</a>
-                </div>';
+                        <i class="fa fa-upload"></i> Choose</a>';
+        }
+
+        $input .=  '</div>';
 
         $inputValue = is_array($value) ? implode(',', $value) : $value;
 
-        $input .= html()->text($name)
-            ->class('form-control')
-            ->attributes($options)
-            ->id($name . '_input')
-            ->value($inputValue);
+        switch ($isUseHTML5) {
+            case true:
+                // Cannot set value, just leave it as empty.
+                $input .= html()->file($name)
+                    ->class('form-control')
+                    ->attributes($options)
+                    ->id($name . '_input');
+                break;
+            default:
+                $input .= html()->text($name)
+                    ->class('form-control')
+                    ->attributes($options)
+                    ->id($name . '_input')
+                    ->value($inputValue);
+        }
 
         $input .= '</div>';
         $input .= '</div>';
