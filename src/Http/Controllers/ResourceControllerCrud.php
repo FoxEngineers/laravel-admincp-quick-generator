@@ -353,6 +353,7 @@ abstract class ResourceControllerCrud extends BaseController
             $data['route'] = $this->route();
             $data['title'] = $this->title();
             $data['primaryKey'] = $this->primaryKey;
+            $data['additionalActions'] = $this->additionalActions();
             $view = $this->crudViewTable();
         }
         return view($view, $data);
@@ -451,5 +452,17 @@ abstract class ResourceControllerCrud extends BaseController
     public function executeImport(\Illuminate\Http\UploadedFile $file)
     {
         // To do import.
+    }
+
+    /**
+     * Example:
+     * [
+     *  [ 'url' => '', 'title' => '', 'icon' => '']
+     * ]
+     * @return array
+     */
+    public function additionalActions(): array
+    {
+        return [];
     }
 }
