@@ -53,7 +53,7 @@ abstract class ResourceControllerCrud extends BaseController
     /** @var BaseRepository $repository */
     protected $repository;
 
-    private ?string $importClass;
+    protected ?string $importClass;
 
     abstract public function repository();
 
