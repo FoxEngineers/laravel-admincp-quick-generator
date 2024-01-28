@@ -29,7 +29,15 @@ abstract class ResourceControllerCrud extends BaseController
 
     public $isUseImport = false;
 
-    public $_methods = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+    public $_methods = [
+        'index',
+        'create',
+        'store',
+        'show',
+        'edit',
+        'update',
+        'destroy',
+    ];
 
     public $_crudView = false;
 
@@ -307,13 +315,13 @@ abstract class ResourceControllerCrud extends BaseController
                 $orderBy = $params['orderBy'];
             }
             $s = $params['s'];
-            $searchLike = isset($params['searchLike']) ? $params['searchLike'] : true;
+            $searchLike = $params['searchLike'] ?? true;
         }
 
         $data = $data->orderBy($key, $orderBy);
 
         if ($params && $s) {
-            if ($searchLike == true) {
+            if ($searchLike) {
                 $data = $data->where($key, 'LIKE', '%' . $s . '%');
             } else $data = $data->where($key, $s);
         }
@@ -350,9 +358,9 @@ abstract class ResourceControllerCrud extends BaseController
         $view = $this->view() . '.index';
         if ($this->useCrudView()) {
             $data['columns'] = $this->columns();
-            $data['canCreate'] = (in_array('create', $this->_methods)) ? true : false;
-            $data['canUpdate'] = (in_array('edit', $this->_methods)) ? true : false;
-            $data['canDelete'] = (in_array('destroy', $this->_methods)) ? true : false;
+            $data['canCreate'] = in_array('create', $this->_methods);
+            $data['canUpdate'] = in_array('edit', $this->_methods);
+            $data['canDelete'] = in_array('destroy', $this->_methods);
             $data['canImport'] = $this->isUseImport;
             $data['route'] = $this->route();
             $data['title'] = $this->title();
