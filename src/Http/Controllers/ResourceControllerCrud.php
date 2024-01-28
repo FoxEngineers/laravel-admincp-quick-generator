@@ -2,6 +2,8 @@
 
 namespace FoxEngineers\AdminCP\Http\Controllers;
 
+use Illuminate\Http\UploadedFile;
+use Maatwebsite\Excel\Facades\Excel;
 use Prettus\Repository\Eloquent\BaseRepository;
 use FoxEngineers\AdminCP\Helpers\Traits\Searchable;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -50,6 +52,8 @@ abstract class ResourceControllerCrud extends BaseController
 
     /** @var BaseRepository $repository */
     protected $repository;
+
+    private ?string $importClass;
 
     abstract public function repository();
 
@@ -449,9 +453,13 @@ abstract class ResourceControllerCrud extends BaseController
         }
     }
 
-    public function executeImport(\Illuminate\Http\UploadedFile $file)
+    public function executeImport(UploadedFile $file)
     {
-        // To do import.
+        if ($this->importClass == null) {
+            return;
+        }
+        $importClass = resolve($this->importClass);
+        Excel::import($importClass, $file);
     }
 
     /**
