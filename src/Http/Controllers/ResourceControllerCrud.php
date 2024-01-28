@@ -63,7 +63,22 @@ abstract class ResourceControllerCrud extends BaseController
 
     protected ?string $importClass;
 
+    /**
+     * ResourceControllerCrud constructor.
+     *
+     * @throws BindingResolutionException
+     */
+    public function __construct()
+    {
+        $this->makeRepository();
+        $this->init();
+    }
+
     abstract public function repository();
+
+    public function init(): void {
+        // Init code here.
+    }
 
     public function route()
     {
@@ -288,16 +303,6 @@ abstract class ResourceControllerCrud extends BaseController
     public function getPerPage()
     {
         return $this->perPage;
-    }
-
-    /**
-     * ResourceControllerCrud constructor.
-     *
-     * @throws BindingResolutionException
-     */
-    public function __construct()
-    {
-        $this->makeRepository();
     }
 
     public function fetchData($params = [], $relations = [])
