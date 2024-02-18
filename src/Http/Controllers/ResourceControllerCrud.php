@@ -151,12 +151,12 @@ abstract class ResourceControllerCrud extends BaseController
 
     public function crudView()
     {
-        return 'backend._form.crud';
+        return 'laravel-admincp::backend._form.crud';
     }
 
     public function crudViewTable()
     {
-        return 'backend._form.index';
+        return 'laravel-admincp::backend._form.index';
     }
 
     public function getImport()
