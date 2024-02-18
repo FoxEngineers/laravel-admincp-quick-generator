@@ -31,6 +31,8 @@ abstract class ResourceControllerCrud extends BaseController
 
     public $isUseImport = false;
 
+    public $isUseExport = false;
+
     public $_methods = [
         'index',
         'create',
@@ -369,6 +371,7 @@ abstract class ResourceControllerCrud extends BaseController
             $data['canUpdate'] = in_array('edit', $this->_methods);
             $data['canDelete'] = in_array('destroy', $this->_methods);
             $data['canImport'] = $this->isUseImport;
+            $data['canExport'] = $this->isUseExport;
             $data['route'] = $this->route();
             $data['title'] = $this->title();
             $data['primaryKey'] = $this->primaryKey;
