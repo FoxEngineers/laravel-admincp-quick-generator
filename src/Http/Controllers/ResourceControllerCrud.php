@@ -490,6 +490,11 @@ abstract class ResourceControllerCrud extends BaseController
         return null;
     }
 
+    public function getExportFileType(): string
+    {
+        return 'xlsx';
+    }
+
     public function export(Request $request)
     {
         $data = $this->getExportData();
@@ -499,7 +504,8 @@ abstract class ResourceControllerCrud extends BaseController
         try {
             $now = Carbon::now();
             $prefix = $now->format('Y_m_d');
-            $fileName = $this->getExportFileName() . '_' . $prefix;
+            $fileName = $this->getExportFileName() . '_' . $prefix
+                . '.' . $this->getExportFileType();
             return Excel::download($data, $fileName);
         } catch (\Exception $e) {
             logger($e);
