@@ -503,7 +503,7 @@ abstract class ResourceControllerCrud extends BaseController
         }
         try {
             $now = Carbon::now();
-            $prefix = $now->format('Y_m_d');
+            $prefix = $now->format('Y_m_d_H_i_s');
             $fileName = $this->getExportFileName() . '_' . $prefix
                 . '.' . $this->getExportFileType();
             return Excel::download($data, $fileName);
