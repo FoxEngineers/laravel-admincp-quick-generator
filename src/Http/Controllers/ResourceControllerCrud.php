@@ -2,8 +2,10 @@
 
 namespace FoxEngineers\AdminCP\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Prettus\Repository\Eloquent\BaseRepository;
 use FoxEngineers\AdminCP\Helpers\Traits\Searchable;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -473,6 +475,34 @@ abstract class ResourceControllerCrud extends BaseController
         }
         $importClass = resolve($this->importClass);
         Excel::import($importClass, $file);
+    }
+
+    public function getExportFileName(): string
+    {
+        return $this->getName();
+    }
+
+    public function getExportData(): ?FromCollection
+    {
+        return null;
+    }
+
+    public function export(Request $request)
+    {
+        $data = $this->getExportData();
+        if (!$data instanceof FromCollection) {
+            return redirect()->route($this->getBaseRoute());
+        }
+        try {
+            $now = Carbon::now();
+            $prefix = $now->format('Y_m_d');
+            $fileName = $this->getExportFileName() . '_' . $prefix;
+            return Excel::download($data, $fileName);
+        } catch (\Exception $e) {
+            logger($e);
+            return redirect()->route($this->getBaseRoute())
+                ->withFlashDanger(__('strings.backend.crud.export.failed') . '. ' . $e->getMessage());
+        }
     }
 
     /**
