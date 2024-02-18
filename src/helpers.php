@@ -109,3 +109,23 @@ if (!function_exists('form_submit')) {
         return resolve(HtmlHelper::class)->formSubmit($title, $classes);
     }
 }
+
+if (!function_exists('get_download_header')) {
+    /**
+     * @param string $fileName
+     * @param string $contentType
+     * @return string[]
+     */
+    function get_download_header(string $fileName, string $contentType = 'image/png'): array
+    {
+        return [
+            'Content-Type' => $contentType,
+            // Specify the desired filename.
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            // Set cache control headers to prevent caching.
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ];
+    }
+}
