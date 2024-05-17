@@ -106,6 +106,11 @@ abstract class ResourceControllerCrud extends BaseController
         return [];
     }
 
+    public function formDataForUpdate()
+    {
+        return [];
+    }
+
     public function importFormData()
     {
         return [];
@@ -215,7 +220,12 @@ abstract class ResourceControllerCrud extends BaseController
             }
             $data['formData']['title'] = $this->title();
             $data['formData']['subTitle'] = $this->titleForUpdate();
-            $data['formData']['inputs'] = $this->formData();
+            $formData = $this->formDataForUpdate();
+            // Just fallback to formData().
+            if (empty($formData)) {
+                $formData = $this->formData();
+            }
+            $data['formData']['inputs'] = $formData;
             $data['formData']['method'] = 'PUT';
             $data['formData']['route'] = route($this->route() . '.update', $id);
             $data['formData']['cancel'] = route($this->getBaseRoute());
