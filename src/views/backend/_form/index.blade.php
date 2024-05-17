@@ -82,7 +82,7 @@
                                             @endforeach
                                         @endif
                                         @if($canView)
-                                            <a href="{{ route($route.'.show',$v->id) }}" data-toggle="tooltip" data-placement="top" title="View" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ route($route.'.show',$v->id) }}" data-toggle="tooltip" data-placement="top" title="View" class="btn btn-success"><i class="fas fa-eye"></i></a>
                                         @endif
                                         @if($canUpdate)
                                         <a href="{{ route($route.'.edit',$v->id) }}" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-primary"><i class="fas fa-edit"></i></a>
