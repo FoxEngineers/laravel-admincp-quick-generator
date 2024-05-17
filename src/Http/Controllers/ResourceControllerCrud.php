@@ -67,7 +67,7 @@ abstract class ResourceControllerCrud extends BaseController
 
     protected ?string $importClass;
 
-    private $canView = false;
+    public $canView = false;
 
     /**
      * ResourceControllerCrud constructor.
