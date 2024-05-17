@@ -67,6 +67,8 @@ abstract class ResourceControllerCrud extends BaseController
 
     protected ?string $importClass;
 
+    private $canView = false;
+
     /**
      * ResourceControllerCrud constructor.
      *
@@ -367,6 +369,7 @@ abstract class ResourceControllerCrud extends BaseController
         $view = $this->view() . '.index';
         if ($this->useCrudView()) {
             $data['columns'] = $this->columns();
+            $data['canView'] = $this->canView;
             $data['canCreate'] = in_array('create', $this->_methods);
             $data['canUpdate'] = in_array('edit', $this->_methods);
             $data['canDelete'] = in_array('destroy', $this->_methods);
