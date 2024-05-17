@@ -151,7 +151,7 @@ abstract class ResourceControllerCrud extends BaseController
         return __('buttons.general.crud.' . $name);
     }
 
-    private function getBaseRoute()
+    public function getBaseRoute()
     {
         return $this->route() . '.index';
     }
