@@ -1,5 +1,5 @@
 <?php
-$sortVal = ['desc','asc'];
+$sortVal = ['desc', 'asc'];
 
 ?>
 <form method="get">
@@ -7,7 +7,9 @@ $sortVal = ['desc','asc'];
     <div class="input-group-prepend">
         <select name="k" class="form-control">
             @foreach($searchFields as $v)
-                <option value="{{ $v }}" {{ request()->get('k') == $v ? 'selected' : '' }}>{{ $v }}</option>
+                <option value="{{ $v }}" {{ request()->get('k') == $v ? 'selected' : '' }}>
+                    @lang($searchLang . '.' . $v)
+                </option>
             @endforeach
         </select>
         <select name="sort" class="form-control">

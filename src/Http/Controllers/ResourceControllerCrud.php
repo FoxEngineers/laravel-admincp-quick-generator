@@ -376,6 +376,7 @@ abstract class ResourceControllerCrud extends BaseController
 
         $data['data'] = $this->fetchData($params);
         $data['searchFields'] = $this->getSearch();
+        $data['searchLang'] = 'text.' . $this->getName() . '.column';
         $view = $this->view() . '.index';
         if ($this->useCrudView()) {
             $data['columns'] = $this->columns();
